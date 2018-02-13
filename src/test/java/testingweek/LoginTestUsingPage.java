@@ -64,6 +64,7 @@ public class LoginTestUsingPage {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		addScreenShot(test, "CreateAccPage");
 		m_CreateAccPageObj = PageFactory.initElements(webDriver, CreateAccountPage.class);
 		m_CreateAccPageObj.sendUNameToCreateAcc("Shafeeq");
 		m_CreateAccPageObj.sendPassToCreateAcc("Secret");
@@ -85,16 +86,16 @@ public class LoginTestUsingPage {
 		test.log(Status.INFO, "Details entered");
 		m_loginPage.clickLoginBtn();
 		test.log(Status.INFO, "Details submitted");
-		File scrFile = ((TakesScreenshot)webDriver).getScreenshotAs(OutputType.FILE);
-        
-        try {
+		addScreenShot(test, "loginSubmittedSct");
+        /*try {
+        	File scrFile = ((TakesScreenshot)webDriver).getScreenshotAs(OutputType.FILE);
         	String pathname = System.getProperty("user.dir") + File.separatorChar + "loginSubmittedSct" +".jpg";
 			FileUtils.copyFile(scrFile, new File(pathname));
 			test.addScreenCaptureFromPath(pathname);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
+		}*/
 
 		try {
 			TimeUnit.MICROSECONDS.sleep(5000);
@@ -111,6 +112,19 @@ public class LoginTestUsingPage {
 		}
 		
 
+	}
+	
+	private static void addScreenShot(ExtentTest et, String screenshotName)
+	{
+		 try {
+	        	File scrFile = ((TakesScreenshot)webDriver).getScreenshotAs(OutputType.FILE);
+	        	String pathname = System.getProperty("user.dir") + File.separatorChar + "Screenshots" + File.separatorChar + screenshotName  +".jpg";
+				FileUtils.copyFile(scrFile, new File(pathname));
+				et.addScreenCaptureFromPath(pathname);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	}
 
 	@After
