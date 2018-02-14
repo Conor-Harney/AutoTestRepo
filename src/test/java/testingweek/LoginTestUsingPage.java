@@ -1,13 +1,10 @@
 package testingweek;
-
 import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -35,11 +32,13 @@ public class LoginTestUsingPage {
 	private static HomePage m_homePage;
 	private static CreateAccountPage m_CreateAccPageObj;
 	private static LoginPage m_loginPage;
-	private static final String BASE_URL = "http://thedemosite.co.uk";
+	private static String BASE_URL;
 	private static Workbook m_inputWorkbook;
+	public static final String SHEET_NAME = "Sheet1";
 
 	@BeforeClass
 	public static void init() {
+		System.out.println("" +System.getProperty("user.dir") + File.separatorChar + "Workbooks" + File.separatorChar + "Book1.xlsx");
 		String workbookFilePath = System.getProperty("user.dir") + File.separatorChar + "Workbooks" + File.separatorChar + "Book1.xlsx";
 		FileInputStream iPutStream = null;
 		m_inputWorkbook = null;
@@ -57,10 +56,9 @@ public class LoginTestUsingPage {
                 e.printStackTrace();
             }
         }
-        
-        System.out.println(readRow(0, "Sheet1").get(1));
+        BASE_URL = readRow(0, SHEET_NAME).get(0);
         report = new ExtentReports();
-		String repFilePath = "MyReport" + ".html";
+		String repFilePath = readRow(0, SHEET_NAME).get(1);
 		repFilePath = System.getProperty("user.dir") + File.separatorChar + repFilePath;
 		report.attachReporter(new ExtentHtmlReporter(repFilePath));
 		System.out.println("Before Class");
@@ -93,8 +91,8 @@ public class LoginTestUsingPage {
 		}
 		addScreenShot(test, "CreateAccPage");
 		m_CreateAccPageObj = PageFactory.initElements(webDriver, CreateAccountPage.class);
-		m_CreateAccPageObj.sendUNameToCreateAcc("Shafeeq");
-		m_CreateAccPageObj.sendPassToCreateAcc("Secret");
+		m_CreateAccPageObj.sendUNameToCreateAcc(readRow(1, SHEET_NAME).get(0));
+		m_CreateAccPageObj.sendPassToCreateAcc(readRow(1, SHEET_NAME).get(1));
 		test.log(Status.INFO, "Account details entered");
 		m_CreateAccPageObj.clickCreateAccBtn();
 		test.log(Status.INFO, "Account details saved");
@@ -108,8 +106,8 @@ public class LoginTestUsingPage {
 		}
 		test.log(Status.INFO, "Navigated to login page");
 		m_loginPage = PageFactory.initElements(webDriver, LoginPage.class);
-		m_loginPage.sendUNameToLogin("Shafeeq");
-		m_loginPage.sendPassToCLogin("Secret");
+		m_loginPage.sendUNameToLogin(readRow(1, SHEET_NAME).get(0));
+		m_loginPage.sendPassToCLogin(readRow(1, SHEET_NAME).get(1));
 		test.log(Status.INFO, "Details entered");
 		m_loginPage.clickLoginBtn();
 		test.log(Status.INFO, "Details submitted");
