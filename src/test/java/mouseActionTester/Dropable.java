@@ -73,7 +73,7 @@ public class Dropable {
 		webDriver.navigate().to(BASE_URL);
 	}
 	
-	//@Test
+	@Test
 	public void defaultFunctionality()
 	{
 		m_rowToOperateOn = 1;
@@ -96,7 +96,7 @@ public class Dropable {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void acceptFunctionalityWithCorrectObject()
 	{
 		m_rowToOperateOn = 2;
@@ -122,7 +122,7 @@ public class Dropable {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void acceptFunctionalityWithIncorrectObject()
 	{
 		m_rowToOperateOn = 3;
@@ -166,6 +166,32 @@ public class Dropable {
 		try {TimeUnit.SECONDS.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
 		try {
 			assertEquals(readRow(m_rowToOperateOn, SHEET_NAME).get(3), dp1.getpvttpropNonGreedyTargetText());
+			extTest.pass(readRow(m_rowToOperateOn, SHEET_NAME).get(4));
+		}
+		catch(AssertionError e)
+		{
+			extTest.fail(readRow(m_rowToOperateOn, SHEET_NAME).get(5));
+		}
+	}
+	
+	@Test
+	public void pvtPropFunctionalityWithGreedyInner()
+	{
+		m_rowToOperateOn = 5;
+		ExtentTest extTest = report.createTest(readRow(m_rowToOperateOn, SHEET_NAME).get(2));
+		extTest.log(Status.INFO, "The test has started");
+		DroppablePage dp1 = PageFactory.initElements(webDriver, DroppablePage.class);
+		try {TimeUnit.SECONDS.sleep(2);} catch (InterruptedException e) {e.printStackTrace();}
+		Actions mouseListener = new Actions(webDriver);
+		
+		extTest.log(Status.INFO,dp1.clickPvttpropgBtn());
+		try {TimeUnit.SECONDS.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
+		extTest.log(Status.INFO,dp1.clickAndHolPvttpropDragableView(mouseListener));
+		extTest.log(Status.INFO,dp1.dragToPvttpropGreedyInnerTarget(mouseListener));
+		extTest.log(Status.INFO,dp1.releaseMouse(mouseListener));
+		try {TimeUnit.SECONDS.sleep(1);} catch (InterruptedException e) {e.printStackTrace();}
+		try {
+			assertEquals(readRow(m_rowToOperateOn, SHEET_NAME).get(3), dp1.getpvttpropGreedyTargetText());
 			extTest.pass(readRow(m_rowToOperateOn, SHEET_NAME).get(4));
 		}
 		catch(AssertionError e)
